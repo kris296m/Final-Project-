@@ -1,0 +1,67 @@
+---
+title: "Week_10_assignment"
+author: "Kristoffer_Segerstrøm"
+date: "2025-03-05"
+output: html_document
+---
+# FILL IN THE CODE BELOW and review the outputs
+#1 Which of these functions is a tidyverse function?
+kings1 <- read.csv("data/kings.csv")  
+kings2 <- read_csv("data/kings.csv")  
+kings3 <- read.csv2("data/kings.csv")  
+kings4 <- read_csv2("data/kings.csv")  
+read_csv() and read_csv2() is a part of the tidyverse-package (specifically readr).
+read.csv() and read.csv2() belongs to base R.
+
+#2 What is the result of running class() on the kings object created with a tidyverse function
+class(kings1)
+The answer is [1] "data.fram"
+
+#3 How many columns does the object have when created with these different functions?
+kings1 <- read_csv2("data/kings.csv")  
+kings2 <- read_csv2("data/kings.csv")  
+kings3 <- read_csv2("data/kings.csv")  
+kings4 <- read_csv2("data/kings.csv")  
+kings has 11 columns. We found out by using _csv2(), We used this because the file contains ";"
+
+#4 Show the dataset so that we can see how R interprets each column
+glimpse(kings1)
+View(kings1)
+
+kings <- read_csv2("data/Danish_kings.csv")
+class(kings)
+glimpse(kings)
+
+#Calculate the duration of reign for all the kings in your table
+kings <- kings %>%
+  filter(!is.na(start_reign) & !is.na(end_reign))
+kings <- kings %>%
+  mutate(duration = end_reign - start_reign)
+glimpse(kings)
+
+#Calculate the average duration of reign for all rulers
+average_duration <- mean(kings$duration, na.rm = TRUE)
+print(average_duration)
+The answer is 20.2 years
+
+#With Tidyverse
+kings %>%
+  summarise(avg_duration = mean(duration, na.rm = TRUE))
+20.2 years
+
+#How many and which kings enjoyed a longer-than-average duration of reign?
+long_reign_kings <- kings %>%
+  filter(duration > average_duration)
+long_reign_kings %>% count()
+print(long_reign_kings)
+24 kings enjoyed a longer-than-average duration of reign
+
+#How many days did the three longest-ruling monarchs rule?
+top_3_kings <- kings %>%
+  arrange(desc(duration)) %>%
+  slice(1:3) %>%
+  mutate(days = duration * 365.25)
+print(top_3_kings)
+glimpse(top_3_kings)
+21915.00+18993.00+15705.75
+56613 days
